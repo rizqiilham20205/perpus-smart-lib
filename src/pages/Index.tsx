@@ -1,13 +1,64 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { Session } from "@supabase/supabase-js";
+import { AuthForm } from "@/components/AuthForm";
+import { Layout } from "@/components/Layout";
+import { Dashboard } from "@/components/Dashboard";
+import { BooksManager } from "@/components/BooksManager";
+import { MembersManager } from "@/components/MembersManager";
+import { TransactionsManager } from "@/components/TransactionsManager";
 
 const Index = () => {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("dashboard");
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setLoading(false);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p>Memuat...</p>
       </div>
-    </div>
+    );
+  }
+
+  if (!session) {
+    return <AuthForm />;
+  }
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case "dashboard":
+        return <Dashboard />;
+      case "books":
+        return <BooksManager />;
+      case "members":
+        return <MembersManager />;
+      case "transactions":
+        return <TransactionsManager />;
+      default:
+        return <Dashboard />;
+    }
+  };
+
+  return (
+    <Layout activeTab={activeTab} onTabChange={setActiveTab}>
+      {renderContent()}
+    </Layout>
   );
 };
 
