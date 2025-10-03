@@ -121,7 +121,6 @@ export const BooksManager = () => {
                     <TableHead>Judul</TableHead>
                     <TableHead>Pengarang</TableHead>
                     <TableHead>Kategori</TableHead>
-                    <TableHead>Kode Rak</TableHead>
                     <TableHead className="text-center">Total</TableHead>
                     <TableHead className="text-center">Tersedia</TableHead>
                     <TableHead className="text-right">Aksi</TableHead>
@@ -133,7 +132,6 @@ export const BooksManager = () => {
                       <TableCell className="font-medium">{book.judul}</TableCell>
                       <TableCell>{book.pengarang}</TableCell>
                       <TableCell>{book.kategori}</TableCell>
-                      <TableCell>{book.kode_rak}</TableCell>
                       <TableCell className="text-center">{book.jumlah_total}</TableCell>
                       <TableCell className="text-center">{book.jumlah_tersedia}</TableCell>
                       <TableCell className="text-right">
@@ -243,14 +241,6 @@ const BookForm = ({ book, onClose }: { book: Book | null; onClose: () => void })
             id="kategori"
             value={formData.kategori}
             onChange={(e) => setFormData({ ...formData, kategori: e.target.value })}
-          />
-        </div>
-        <div>
-          <Label htmlFor="kode_rak">Kode Rak</Label>
-          <Input
-            id="kode_rak"
-            value={formData.kode_rak}
-            onChange={(e) => setFormData({ ...formData, kode_rak: e.target.value })}
           />
         </div>
         <div>
